@@ -31,7 +31,7 @@ SYSTEM_PROMPT = (
     "You are an assistant that analyzes the contents of a website "
     "and provides a concise, accurate, and beautifully formatted summary. "
     "Use clear markdown with headings and bullet points. "
-    "Do NOT use bold formatting (e.g., do not use '**') anywhere in the output. " # Modified instruction
+    "Do NOT use bold formatting (e.g., do not use '**') anywhere in the output. "
     "Ignore navigation-related text. Focus on the main content, key topics, and any important announcements."
 )
 
@@ -54,8 +54,15 @@ def summarize(url):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu") # Added for potentially faster startup
-    chrome_options.add_argument("--disable-extensions") # Added for potentially faster startup
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    # Added arguments to improve stability in headless environments
+    chrome_options.add_argument("--remote-debugging-port=9222") # Specify a fixed debugging port
+    chrome_options.add_argument("--disable-setuid-sandbox") # Disable setuid sandbox
+    chrome_options.add_argument("--single-process") # Run in a single process
+    chrome_options.add_argument("--disable-features=NetworkService") # Disable network service
+    chrome_options.add_argument("--disable-features=VizDisplayCompositor") # Disable VizDisplayCompositor
+
 
     driver = webdriver.Chrome(options=chrome_options)
     driver.get(url)
@@ -103,3 +110,4 @@ def summarize(url):
         return f"❌ Error communicating with Google Gemini API: {str(e)}"
     except Exception as e:
         return f"❌ An unexpected error occurred during summarization: {str(e)}"
+
