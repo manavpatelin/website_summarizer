@@ -63,13 +63,22 @@ def summarize(url):
     chrome_options.add_argument("--disable-features=NetworkService") # Disable network service
     chrome_options.add_argument("--disable-features=VizDisplayCompositor") # Disable VizDisplayCompositor
 
-
     driver = webdriver.Chrome(options=chrome_options)
-    driver.get(url)
-    time.sleep(2) # Consider replacing with explicit waits for better performance
+    
+    # Set page load timeout to a higher value (e.g., 300 seconds or 5 minutes)
+    driver.set_page_load_timeout(300) 
+    # Set page load strategy to 'eager' to wait only for initial HTML
+    chrome_options.page_load_strategy = 'eager' 
+
+    try:
+        driver.get(url)
+        time.sleep(2) # Consider replacing with explicit waits for better performance
+    except Exception as e:
+        driver.quit() # Ensure driver quits even on timeout
+        return f"❌ Error loading page (timeout or other issue): {str(e)}"
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
+    driver.quit() # Ensure the driver quits to free up resources
 
     for tag in soup(["img", "style", "script", "nav", "footer", "header", "button", "input", "svg", "a"]):
         tag.decompose()
@@ -110,4 +119,3 @@ def summarize(url):
         return f"❌ Error communicating with Google Gemini API: {str(e)}"
     except Exception as e:
         return f"❌ An unexpected error occurred during summarization: {str(e)}"
-
