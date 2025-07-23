@@ -29,7 +29,7 @@
             flex-direction: column;
             gap: 15px;
         }
-        input[type="text"] {
+        input[type="text"], input[type="email"] {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -73,7 +73,7 @@
 <body>
     <div class="container">
         <h1>Website Summarizer</h1>
-        <form method="POST">
+        <form method="post">
             <label for="url_input">Enter URL:</label>
             <input type="text" id="url_input" name="url_input" placeholder="e.g., https://www.example.com" required>
             <button type="submit">Summarize</button>
@@ -84,6 +84,10 @@
             <h3>Summary:</h3>
             <pre>{{ summary }}</pre>
         </div>
+        {% endif %}
+
+        {% if message %}
+        <p>{{ message }}</p>
         {% endif %}
     </div>
 </body>
