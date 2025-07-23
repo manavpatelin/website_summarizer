@@ -1,7 +1,7 @@
 import time
 import requests
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options # Import Options
+from selenium.webdriver.chrome.options import Options # Import Options 
 from bs4 import BeautifulSoup
 
 # Required constants
@@ -19,24 +19,20 @@ def messages_for(website):
     return [{"role": "user", "content": f"Summarize this:\n\n{website.text}"}]
 
 def summarize(url):
-    chrome_options = Options()
-    # Option 1: Run in headless mode (no visible browser UI)
-    # This is highly recommended for server-side applications like Flask
+    chrome_options = Options() # Create an instance of Chrome options 
+    # Run in headless mode (no visible browser UI) - highly recommended for server-side applications 
     chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox") # Required for some environments (e.g., Docker, Linux servers)
-    chrome_options.add_argument("--disable-dev-shm-usage") # Overcomes limited resource problems
+    # Required for some environments (e.g., Docker, Linux servers) 
+    chrome_options.add_argument("--no-sandbox")
+    # Overcomes limited resource problems in environments like Docker containers 
+    chrome_options.add_argument("--disable-dev-shm-usage")
 
-
-    driver = webdriver.Chrome(options=chrome_options) # Pass the options
+    driver = webdriver.Chrome(options=chrome_options) # Pass the configured options to the Chrome driver 
     driver.get(url)
     time.sleep(2)
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    # If you used a temporary user data directory, clean it up
-    # if 'user_data_dir' in locals() and user_data_dir:
-    #     shutil.rmtree(user_data_dir)
+    driver.quit() # Ensure the driver quits to free up resources
 
     for tag in soup(["img", "style", "script", "nav", "footer", "header", "button", "input", "svg", "a"]):
         tag.decompose()
