@@ -26,6 +26,7 @@ def summarize(url):
     chrome_options.add_argument("--no-sandbox") # Required for some environments (e.g., Docker, Linux servers)
     chrome_options.add_argument("--disable-dev-shm-usage") # Overcomes limited resource problems
 
+
     driver = webdriver.Chrome(options=chrome_options) # Pass the options
     driver.get(url)
     time.sleep(2)
