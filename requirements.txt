@@ -4,4 +4,4 @@ requests
 ipython
 jupyter
 Flask
-guvicorn
+gunicorn
